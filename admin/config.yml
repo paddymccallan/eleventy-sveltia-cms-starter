@@ -10,6 +10,7 @@ backend:
   name: github
   repo: paddymccallan/eleventy-sveltia-cms-starter
   branch: master
+  automatic_deployments: false
 
 # The folder used to store uploaded images
 media_folder: "assets/img"
