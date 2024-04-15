@@ -1,8 +1,8 @@
 ---
 layout: layouts/blog.njk
-title: Blog
+title: Blog - test
 description: A sample Blog index listing all posts.
-date: 2017-01-01
+date: 2017-01-01T00:00:00.000Z
 eleventyNavigation:
   key: blog
   title: Blog
