@@ -15,75 +15,118 @@ backend:
 # The folder used to store uploaded images
 media_folder: "assets/img"
 
-# The CMS collections and their fields
+# Docs: https://www.netlifycms.org/docs/configuration-options/#collections
 collections:
-  - name: "blog"
-    label: "Posts"
-    label_singular: "Post"
-    folder: "posts"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Author", name: "author", widget: "relation", collection: "authors", search_fields: "name", value_field: "name" }
-      - { label: "Summary", name: "summary", widget: "text" }
-      - { label: "Tags", name: "tags", widget: "list", default: ["post"], hint: "Enter tags separated by a comma" }
-      - label: "Image"
-        name: "image"
-        widget: "image"
-        hint: "Upload an image for this post. You can also use an image URL."
-        # Uncomment the lines below if you want to set a max file upload size e.g. 2MB
-        #media_library:
-          #config:
-            #max_file_size: 2048000 # maximum image file size in bytes
-      - { label: "Image Alt Text", name: "imageAltText", widget: "string" }
-      - { label: "Body", name: "body", widget: "markdown" }
-  - name: "pages"
-    label: "Pages"
-    label_singular: "Page"
-    folder: "pages"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Permalink", name: "permalink", widget: "hidden" }
-      - label: "Navigation"
-        name: "eleventyNavigation"
-        widget: "object"
-        fields:
-          - { label: "Key", name: "key", widget: "string", hint: "A unique string for your navigation item, typically the page slug." }
-          - { label: "Title", name: "title", widget: "string", hint: "The visible title of the navigation item." }
-          - { label: "Order", name: "order", widget: "number", default: 999, hint: "Set a number between 0 and 999 to set the display order of your navigation item." }
-      - { label: "Body", name: "body", widget: "markdown", hint: "Plain text, Markdown, and HTML formatting is supported. See the Markdown cheat sheet: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" }
-  - name: "authors"
-    label: "Authors"
-    label_singular: "Author"
-    icon: "person"
-    folder: "authors"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Name", name: "name", widget: "string" }
-      - label: "Image"
-        name: "image"
-        widget: "image"
-        hint: "Upload an image for this author (max. 1MB). You can also use an image URL."
-        media_library:
-          config:
-            max_file_size: 1024000 # maximum image file size in bytes
-      - { label: "Description", name: "body", widget: "markdown", hint: "Plain text, Markdown, and HTML formatting is supported. See the Markdown cheat sheet: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" }
-  - name: "settings"
-    label: "Settings"
-    icon: "settings"
-    extension: "yml"
-    format: "yml"
+  - label: 'Site settings'
+    name: 'site'
     files:
-      - file: "_data/settings.yml"
-        label: "Site Settings"
-        name: "site"
+      - label: 'Info'
+        name: 'info'
+        file: 'content/site/info.json'
+        format: 'json'
+        editor:
+          preview: false
         fields:
-          - { label: "Site Title", name: "title", widget: "string", hint: "Your site's title, used for branding and SEO." }
-          - { label: "Site Description", name: "description", widget: "text", hint: "Your site's description, used for SEO." }
-          - { label: "Site URL", name: "url", widget: "string", hint: "Your live site's full URL." }
+          - { label: Site Name, name: sitename, widget: string, hint: 'This is used for the site title' }
+          - {
+              label: Site Description,
+              name: sitedescription,
+              widget: string,
+              hint: 'This is used as descriptive text for links that link to this site',
+            }
+          - {
+              label: Site Language,
+              name: sitelang,
+              widget: string,
+              pattern: ['^[a-z]{2}([-])?([A-Za-z]{2})?$', 'Must match "xx" or "xx-XX" syntax (ex. "en" or "sv-SE")'],
+            }
+          # - { label: Site Email, name: siteemail, widget: string, required: false }
+  - name: 'products'
+    label: 'Product'
+    label_singular: 'Product'
+    folder: 'content/products'
+    create: true
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    preview_path: 'projects/{{slug}}'
+    fields:
+      - {
+          label: 'Product Category',
+          name: 'category',
+          widget: 'select',
+          options: [
+            { label: 'Low Back Monks Benches', value: 'low-back-monks-benches' },
+            { label: 'Tall Monks Benches', value: 'tall-monks-benches' },
+            { label: 'Tyrone Style Monks Bench', value: 'tyrone-style-monks-bench' },
+            { label: 'Plain Style Coat Rack', value: 'plain-style-coat-rack' },
+            { label: 'Basket Coat Racks', value: 'basket-coat-racks' },
+            { label: 'Radiator Covers', value: 'radiator-covers' },
+            { label: 'Standard Toy Box', value: 'standard-toy-box' },
+            { label: 'Large Toy Box', value: 'large-toy-box' },
+            { label: 'Victorian Toy Box', value: 'victorian-toy-box' },
+            { label: 'Personalised Dog Beds', value: 'personalised-dog-beds' },
+            { label: 'Victorian Style Monks Benches', value: 'victorian-style-monks-benches' },
+            { label: 'Dog beds / Dog racks', value: 'victorian-style-monks-benches' },
+            { label: 'More shoe storage', value: 'shoe-storage' },
+          ],
+        }
+      - { label: 'Title', name: 'title', widget: 'string', required: true }
+      - { label: 'Description', name: 'description', widget: 'string', required: false }
+      - { label: 'Cover Image', name: 'cover', widget: 'image', required: false, allow_multiple: false }
+      - { label: 'Content', name: 'body', widget: 'markdown', required: false }
+      - {
+          label: 'Gallery',
+          name: 'gallery',
+          widget: 'list',
+          required: false,
+          summary: '{{fields.image}}',
+          field: { label: 'Image', name: 'image', widget: 'image' },
+        }
+  - name: 'home-products'
+    label: 'Home Page Items'
+    label_singular: 'Home Page Item'
+    folder: 'content/home-products'
+    create: true
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    fields:
+      - { label: 'Order', name: 'order', widget: 'number', required: true }
+      - {
+          label: 'Title',
+          name: 'title',
+          widget: 'string',
+          required: true
+        }
+      - {
+          label: 'Cover Image',
+          name: 'cover',
+          widget: 'image',
+          required: true
+        }
+      - {
+          label: 'Category',
+          name: 'category',
+          widget: 'select',
+          options: [
+            { label: 'Low Back Monks Benches', value: 'low-back-monks-benches' },
+            { label: 'Tall Monks Benches', value: 'tall-monks-benches' },
+            { label: 'Tyrone Style Monks Bench', value: 'tyrone-style-monks-bench' },
+            { label: 'Plain Style Coat Rack', value: 'plain-style-coat-rack' },
+            { label: 'Basket Coat Racks', value: 'basket-coat-racks' },
+            { label: 'Radiator Covers', value: 'radiator-covers' },
+            { label: 'Standard Toy Box', value: 'standard-toy-box' },
+            { label: 'Large Toy Box', value: 'large-toy-box' },
+            { label: 'Victorian Toy Box', value: 'victorian-toy-box' },
+            { label: 'Victorian Style Monks Benches', value: 'victorian-style-monks-benches' },
+            { label: 'Dog beds / Dog racks', value: 'victorian-style-monks-benches' },
+            { label: 'More shoe storage', value: 'shoe-storage' },
+          ],
+          required: true
+        }
+      - {
+          label: 'Tag',
+          name: 'tag',
+          widget: 'string',
+          required: false
+        }
+
